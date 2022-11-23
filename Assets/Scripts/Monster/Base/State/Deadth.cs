@@ -1,14 +1,33 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using FrameWork.FSM;
 
-namespace Assets.Scripts.Monster.Base.State
+public class Death : IState
 {
-    public class Deadth : ScriptableObject
+    public Death(GameObject gameObject, Entity entity, AudioClip deathSound)
     {
-        [MenuItem("Tools/MyTool/Do It in C#")]
-        static void DoIt()
-        {
-            EditorUtility.DisplayDialog("MyTool", "Do It in C# !", "OK", "");
-        }
+        this.gameObject = gameObject;
+        this.entity = entity;
+        this.deathSoundClip = deathSound;
+    }
+
+    public StateID Id => StateID.Deadth;
+
+    GameObject gameObject;
+    Entity entity;
+    AudioClip deathSoundClip;
+    public void Enter()
+    {
+        //SoundManager.instance.PlayEffect(deathSoundClip);
+        entity.animator.Play("Death");
+        Coroutine.instance.Timer(0.5f, () => entity.RelasePool());
+    }
+
+    public void Execute()
+    {
+    }
+
+    public void Exit()
+    {
     }
 }

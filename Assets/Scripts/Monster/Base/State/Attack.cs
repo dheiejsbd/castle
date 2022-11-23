@@ -1,14 +1,31 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using FrameWork.FSM;
 
-namespace Assets.Scripts.Monster.Base.State
+public class Attack : IState
 {
-    public class Attack : ScriptableObject
+    public Attack(GameObject gameObject, Entity entity)
     {
-        [MenuItem("Tools/MyTool/Do It in C#")]
-        static void DoIt()
-        {
-            EditorUtility.DisplayDialog("MyTool", "Do It in C# !", "OK", "");
-        }
+        this.gameObject = gameObject;
+        this.entity = entity;
+    }
+
+    public StateID Id => StateID.Attack;
+
+    GameObject gameObject;
+    Entity entity;
+
+    public void Enter()
+    {
+        entity.animator.Play("Attack");
+    }
+
+    public void Execute()
+    {
+
+    }
+
+    public void Exit()
+    {
     }
 }

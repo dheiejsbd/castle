@@ -1,33 +1,36 @@
+using Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FrameWork.Page;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
-    Player.PlayerController player;
-    public MonsterManager monsterManager { get; private set; }
+    public PageManager pageManager;
+    
     void Awake()
     {
+        if(instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
+        pageManager = new PageManager();
     }
+
     void Start()
     {
-        player = GameObject.FindObjectOfType<Player.PlayerController>();
-        monsterManager = GameObject.FindObjectOfType<MonsterManager>();
-        StartCoroutine(s());
+        DontDestroyOnLoad(gameObject);
+        GetComponent<Coroutine>().OnStart();
+        pageManager.Start();
     }
+
+
     void Update()
     {
-        
+        pageManager.Update();
     }
-    IEnumerator s()
-    {
-        while (true)
-        {
 
-        yield return new WaitForSeconds(1f);
-        monsterManager.Spawn(MonsterID.Shilder);
-        }
-    }
 }

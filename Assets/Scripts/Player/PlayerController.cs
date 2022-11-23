@@ -10,16 +10,22 @@ namespace Player
     {
         PlayerInput input;
         PlayerAnimController animController;
-        float nextAttackTime;
-        const float AttackDist = 0.878f;
-        const float AttackTime = 0.2f;
+        bool canAttack = true;
+        const float AttackDist = 0.15f * 5;
+        const float AttackOffset = 0.05f * 5;
+        const float AttackCoolTime = 0.125f;
 
-        event Action<Entity> AttackSuccess;
-        event Action AttackFailed;
+        public event Action<Entity> AttackSuccess;
+        [SerializeField] ParticleSystem flash;
+
+        [SerializeField]AudioClip attackSound;
+        [SerializeField]AudioClip attackSuccessSound;
 
         public readonly Message<Entity> HitMessage = new Message<Entity>();
+        public Func<bool, Entity> GetNearByPlayerMonster;
         public bool death { get; private set; }
-        public void Start()
+
+        public void OnStart()
         {
             input = new PlayerInput();
             animController = gameObject.AddComponent<PlayerAnimController>();
@@ -27,31 +33,39 @@ namespace Player
             input.LeftAttack.AddListener(() => TryAttack(true));
             input.RightAttack.AddListener(() => TryAttack(false));
 
+            AttackSuccess += (Entity con) => SoundManager.instance.PlayEffect(attackSuccessSound);
             AttackSuccess += (Entity con) => con.Hit();
+            AttackSuccess += (Entity con) =>
+            {
+                flash.transform.position = con.gameObject.transform.position;
+                flash.Play();
+            };
             HitMessage.AddListener(Hit);
         }
 
-        private void Update()
+        public void OnUpdate()
         {
             if(death) return;
             input.Update();
-            nextAttackTime -= Time.deltaTime;
         }
 
         void Hit(Entity entity)
         {
+            Debug.Log("player death");
             death = true;
             animController.Hit();
         }
 
-        void TryAttack(bool left)
+        void TryAttack(bool left) 
         {
-            if (!CanAttack()) return;
+            if (!canAttack) return;
             Attack(left);
         }
         void Attack(bool left)
         {
-            nextAttackTime = AttackTime;
+            SoundManager.instance.PlayEffect(attackSound);
+            canAttack = false;
+            Coroutine.instance.Timer(AttackCoolTime, () => canAttack = true);
             animController.Attack();
             if (left)
             {
@@ -61,30 +75,16 @@ namespace Player
             {
                 animController.SeeRight();
             }
-            var controller = GameManager.instance.monsterManager.GetNearByPlayerMonster(left);
+            var controller = GetNearByPlayerMonster(left);
 
 
-            if(controller == null)
+            if(controller != null)
             {
-                AttackFailed?.Invoke();
-            }
-            else
-            {
-                if(Mathf.Abs(controller.gameObject.transform.position.x) <= AttackDist)
+                if(Mathf.Abs(Mathf.Abs(controller.gameObject.transform.position.x) - AttackDist) <= AttackOffset)
                 {
                     AttackSuccess?.Invoke(controller);
                 }
-                else
-                {
-                    AttackFailed?.Invoke();
-                }
             }
-        }
-
-        bool CanAttack()
-        {
-            if (nextAttackTime > 0) return false;
-            return true;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace FrameWork.FSM
 {
     public interface IState
     {
-        int Id { get; }
+        StateID Id { get; }
 
         void Enter();
         void Execute();

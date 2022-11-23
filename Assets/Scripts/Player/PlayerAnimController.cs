@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using FrameWork.Player;
+using Random = UnityEngine.Random;
 
 namespace Player
 {
@@ -16,6 +17,7 @@ namespace Player
 
         public void Attack()
         {
+            animator.SetInteger("AttackID", Random.Range(0, animator.GetInteger("AttackCount")));
             animator.SetTrigger("attack");
         }
         public void Hit()

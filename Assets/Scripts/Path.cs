@@ -4,17 +4,34 @@ using UnityEngine;
 
 public class Path : MonoBehaviour
 {
-    enum Type
+    public enum Type
     {
         sine,
-        line
+        line,
+        size
     }
+    public static Path[] paths;
 
     [SerializeField] Type type;
     [SerializeField] float startPos;
     [SerializeField] float hight;
     [SerializeField] int quality;
     [SerializeField, Range(0, 1)] List< float> point;
+
+    private void Awake()
+    {
+        if(paths == null)
+        {
+            paths = new Path[(int)Type.size];
+        }
+        paths[(int)type] = this;
+    }
+    public static Path GetPath(Type type)
+    {
+        return paths[(int)type];
+    }
+
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;

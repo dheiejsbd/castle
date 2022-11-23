@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdad72c9355a994490b439c1a39aff6, type: 3}
+  m_Name: ShilderData
+  m_EditorClassIdentifier: 
+  gameObject: {fileID: 250448874059954433, guid: 77b76b32466b17544aec419838d2633d, type: 3}
+  deathSound: {fileID: 8300000, guid: b7dae0e55a3dfec4d84020acb532aedf, type: 3}
+  attackSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 84ece819b9e2b454589486554f1cb74c, type: 3}
+  pathtype: 0

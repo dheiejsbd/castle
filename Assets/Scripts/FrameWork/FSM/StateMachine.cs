@@ -7,16 +7,15 @@ namespace FrameWork.FSM
 {
     public class StateMachine
     {
-        public int ActivatedStateId { get { return activatedState.Id; } }
+        public StateID ActivatedStateId { get { return activatedState.Id; } }
         public string ActivatedStateName { get { return activatedState.ToString(); } }
 
-        Dictionary<int, IState> states = new Dictionary<int, IState>();
+        Dictionary<StateID, IState> states = new Dictionary<StateID, IState>();
         IState activatedState;
 
 
-        public void Switch(int id)
+        public void Switch(StateID id)
         {
-            Debug.Log("Change " + id);
             activatedState?.Exit();
             activatedState = states[id];
             activatedState.Enter();
@@ -24,6 +23,11 @@ namespace FrameWork.FSM
 
         public void Add(IState state)
         {
+            if(states.ContainsKey(state.Id))
+            {
+                Debug.LogWarning(state + " Fail to Add State");
+                return; 
+            }
             states.Add(state.Id, state);
         }
 

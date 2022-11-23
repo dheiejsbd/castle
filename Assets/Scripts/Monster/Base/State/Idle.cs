@@ -1,22 +1,29 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using FrameWork.FSM;
-    public class Idle : IState
+public class Idle : IState
+{
+    public Idle (GameObject gameObject, Entity entity)
     {
-        public int Id => throw new System.NotImplementedException();
-
-        public void Enter()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Execute()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Exit()
-        {
-            throw new System.NotImplementedException();
-        }
+        this.gameObject = gameObject;
+        this.entity = entity;
     }
+
+    public StateID Id => StateID.Idle;
+
+    GameObject gameObject;
+    Entity entity;
+
+    public void Enter()
+    {
+        entity.animator.Play("Idle");
+    }
+
+    public void Execute()
+    {
+    }
+
+    public void Exit()
+    {
+    }
+}

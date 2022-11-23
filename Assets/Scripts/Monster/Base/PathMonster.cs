@@ -8,37 +8,40 @@ using UnityEngine.Pool;
 using Random = UnityEngine.Random;
 abstract class PathMonster : Entity
 {
-    public PathMonster(Path path, IObjectPool<Entity> pool, GameObject gameObject) : base(pool, gameObject)
+    public PathMonster(Path path, IObjectPool<Entity> pool, EntityData data) : base(pool, data)
     {
         this.path = path;
     }
 
-    bool flip;
+    /// <summary>
+    /// Move 도중 자동으로 이벤트 발생
+    /// </summary>
+    public event Action<Entity> EnterEventPointEvent;
+
     Path path;
     float pathPercent;
+    protected float EnterPathPercent = 0.1f;
     public override void Initialize()
     {
+        base.Initialize(); 
         pathPercent = 1;
-        death = false;
-        flip = Random.Range(0, 2) == 0;
         renderer.flipX = !flip;
         gameObject.transform.position = path.GetPosition(pathPercent, flip);
     }
-    protected void Move(float dist)
+    public void Move(float dist)
     {
         pathPercent -= dist;
-        pathPercent = Mathf.Clamp01(pathPercent);
-        if (pathPercent <= 0.1f)
+        pathPercent = Mathf.Clamp(pathPercent, EnterPathPercent, 1);
+        if (pathPercent <= EnterPathPercent)
         {
-            Enter();
+            EnterEventPointEvent?.Invoke(this);
             return;
         }
         gameObject.transform.position = path.GetPosition(pathPercent, flip);
     }
 
-    public override void Update()
+    public override float GetYPos()
     {
-        if (death) return;
-        Move(Time.deltaTime);
+        return path.GetPosition(0.5f,false).y;
     }
 }
