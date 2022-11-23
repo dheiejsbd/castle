@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 250448874059954462}
   - component: {fileID: 250448874059954463}
   - component: {fileID: 250448874059954461}
-  - component: {fileID: 1553249397067950382}
+  - component: {fileID: 3155031093289338685}
   m_Layer: 0
   m_Name: Skelaton
   m_TagString: Untagged
@@ -106,7 +106,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1553249397067950382
+--- !u!114 &3155031093289338685
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
