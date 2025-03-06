@@ -6,8 +6,7 @@ using FrameWork.UI;
 public class LobbyWindow : UIWidget
 {
     public UIButton optionButton;
-    public UIButton upGradeButton;
-    public UIButton skinButton;
+    public UIButton shopButton;
 
     public RectTransform Logo;
 

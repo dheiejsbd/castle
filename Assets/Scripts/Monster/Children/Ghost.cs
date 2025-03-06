@@ -16,11 +16,7 @@ class Ghost : PathMonster
         FSM.Add(new Attack(gameObject, this));
         FSM.Add(new Death(gameObject, this, data.deathSound));
 
-        EnterEventPointEvent += (Entity e) => FSM.Switch(StateID.Deadth);
-        EnterEventPointEvent += (Entity e) => hitAble = false;
         DeathEvent += (Entity e) => FSM.Switch(StateID.Attack);
-        DeathEvent += (Entity e) => Debug.Log("Attack");
-        EnterPathPercent = 0.05f;
     }
     bool hitAble = true;
     public override bool death => !hitAble;

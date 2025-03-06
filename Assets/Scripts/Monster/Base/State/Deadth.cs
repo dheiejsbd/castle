@@ -18,7 +18,6 @@ public class Death : IState
     AudioClip deathSoundClip;
     public void Enter()
     {
-        //SoundManager.instance.PlayEffect(deathSoundClip);
         entity.animator.Play("Death");
         Coroutine.instance.Timer(0.5f, () => entity.RelasePool());
     }

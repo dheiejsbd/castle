@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using FrameWork.Page;
 using Player;
 using System;
 using System.Collections.Generic;
@@ -19,15 +20,16 @@ public class MonsterManager : MonoBehaviour
     }
     List<Entity> EnableMonster = new List<Entity>();
 
-    Entity attackSuccessMonster;
     PlayerController player;
+
+    public event Action<Entity> EntityDeathEvent;
+
     public void OnAwake()
     {
         AddPool(MonsterID.Goblin);
         AddPool(MonsterID.Shilder);
         AddPool(MonsterID.Ghost);
 
-        attackSuccessMonster = null;
         player = GameObject.FindObjectOfType<PlayerController>();
     }
     void AddPool(MonsterID ID, int maxSize = 20)
@@ -36,6 +38,7 @@ public class MonsterManager : MonoBehaviour
         pool.Add(ID, new ObjectPool<Entity>(() => CreateMonster(ID, (IObjectPool<Entity> pool) =>
                                                                 {
                                                                     var entity = data.Instance(pool);
+                                                                    entity.DeathEvent += (Entity entity) => { EntityDeathEvent?.Invoke(entity); };
                                                                     entity.gameObject.SetActive(false);
                                                                     return entity;
                                                                 }),
@@ -47,22 +50,12 @@ public class MonsterManager : MonoBehaviour
     void AttackSuccess(Entity entity)
     {
         if (entity.death) return;
-        Time.timeScale = 0.3f;
-        attackSuccessMonster = entity;
         player.HitMessage.Send(entity);
-
-        Coroutine.instance.TimerAtRealTime(1.5f, () => DOTween.To(() => 0.3f, x => Time.timeScale = x, 1, 1));
     }
 
 
     public void OnUpdate()
     {
-        if(attackSuccessMonster != null)
-        {
-            return;
-        }
-
-
         foreach (var item in EnableMonster)
         {
             item.Update();
@@ -127,14 +120,5 @@ public class MonsterManager : MonoBehaviour
     }
     public void Initialize()
     {
-    }
-
-    public void ReleasePool()
-    {
-        while (EnableMonster.Count > 0)
-        {
-            EnableMonster[0].RelasePool();
-            EnableMonster.RemoveAt(0);
-        }
     }
 }

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: GhostData
   m_EditorClassIdentifier: 
   gameObject: {fileID: 250448874059954433, guid: 653ebb23601a9ca4b9fe999d50b1f4fe, type: 3}
+  progressValue: 1
   deathSound: {fileID: 8300000, guid: ae503c57146389345b1cb113da9a412c, type: 3}
   attackSound: {fileID: 8300000, guid: 90ae1136dbec7144581266476171c750, type: 3}
   hitSound: {fileID: 8300000, guid: ae503c57146389345b1cb113da9a412c, type: 3}

@@ -20,13 +20,16 @@ public abstract class Entity
             renderer = gameObject.GetComponent<SpriteRenderer>();
             animator = gameObject.GetComponent<Animator>();
             animationEvent = gameObject.GetComponent<EntityAnimationEvent>();
+            hitBoxes = gameObject.GetComponents<HitBox>();
+            foreach (HitBox hitBox in hitBoxes)
+            {
+                hitBox.Enter +=(HitBox hitbox, Collision2D collision) => CollisionEnter?.Invoke(hitbox, collision);
+            }
         }
         GetComponents();
-
-        animationEvent.AttackMessage.AddListener(() => AttackSuccessEvent?.Invoke(this));
     }
 
-
+    public event Action<HitBox, Collision2D> CollisionEnter;
 
 
 
@@ -42,8 +45,10 @@ public abstract class Entity
 
     public GameObject gameObject;
     public Animator animator;
+    public Rigidbody2D rd;
+    public HitBox[] hitBoxes;
 
-    protected SpriteRenderer renderer;
+    public SpriteRenderer renderer;
     protected EntityAnimationEvent animationEvent;
 
 
@@ -69,9 +74,10 @@ public abstract class Entity
     public virtual void Initialize()
     {
         Health = MaxHealth;
+        dismiss= false;
     }
     public abstract void Update();
-
+    
     public void SetFlip(bool flip)
     {
         this.flip = flip;
@@ -82,9 +88,13 @@ public abstract class Entity
     }
 
 
-
+    public void AttackSuccess()
+    {
+        AttackSuccessEvent?.Invoke(this);
+    }
     public virtual void Hit()
     {
+        if(dismiss) return;
         Health--;
         if(Health <= 0)
         {
@@ -98,8 +108,8 @@ public abstract class Entity
         DeathEvent?.Invoke(this);
     }
 
-    public void RelasePool(float Time = 0.5f)
+    public void RelasePool()
     {
-        Coroutine.instance.Timer(Time, () => managedPool.Release(this));
+        managedPool.Release(this);
     }
 }

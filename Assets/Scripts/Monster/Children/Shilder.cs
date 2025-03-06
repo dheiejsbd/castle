@@ -18,7 +18,7 @@ class Shilder : PathMonster
         FSM.Add(new Death(gameObject, this, data.deathSound));
 
         HitEvent += (Entity e) => FSM.Switch(StateID.Hit);
-        EnterEventPointEvent += (Entity e) => FSM.Switch(StateID.Attack);
+        AttackSuccessEvent += (Entity e) => FSM.Switch(StateID.Attack);
         DeathEvent += (Entity e) => FSM.Switch(StateID.Deadth);
     }
     GameObject Shild;

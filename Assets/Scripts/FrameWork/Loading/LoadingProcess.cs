@@ -4,28 +4,32 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
+using FrameWork.UI;
+using DG.Tweening;
 
 namespace FrameWork.Loading
 {
     public class LoadingProcess : MonoBehaviour
     {
-        static string SceneName = "";
-        [SerializeField] Image LoddingBar;
-        public static void LoddingScene(string _SceneName)
+        public static LoadingProcess instance;
+
+        LoadingWindow loadingWindow;
+        
+        public void OnStart()
         {
-            SceneName = _SceneName;
-            SceneManager.LoadScene("LoadScene");
+            instance = this;
+            loadingWindow = UIManager.instance.GetWindow(typeof(LoadingWindow)) as LoadingWindow;
         }
-
-        void Start()
+        public IEnumerator LoadScene(string sceneName, LoadSceneMode loadSceneMode = LoadSceneMode.Single)
         {
-            StartCoroutine(Loading());
-        }
+            loadingWindow.SetPrograss(0);
+            loadingWindow.ShowSequence.Play();
 
-        IEnumerator Loading()
-        {
-            AsyncOperation op = SceneManager.LoadSceneAsync(SceneName);
+            yield return new WaitForSeconds(loadingWindow.FadeTime);
 
+
+            AsyncOperation op = SceneManager.LoadSceneAsync(sceneName, loadSceneMode);
             op.allowSceneActivation = false;
             float timer = 0;
             while (op.isDone)
@@ -33,20 +37,28 @@ namespace FrameWork.Loading
                 yield return null;
                 if (op.progress < 0.9f)
                 {
-                    LoddingBar.fillAmount = op.progress;
+                    loadingWindow.SetPrograss(op.progress);
                 }
                 else
                 {
                     timer += Time.unscaledDeltaTime;
-                    LoddingBar.fillAmount = Mathf.Lerp(0.9f, 1, timer);
-                    if (LoddingBar.fillAmount >= 1)
+                    loadingWindow.SetPrograss(Mathf.Lerp(0.9f, 1, timer));
+                    if (timer >= 1)
                     {
-                        op.allowSceneActivation = true;
                         yield break;
                     }
                 }
             }
+            op.allowSceneActivation = true;
+            loadingWindow.HideSequence.Play();
+            yield return new WaitForSeconds(loadingWindow.FadeTime);
+            yield return null;
+        }
 
+        public IEnumerator UnloadScene(string sceneName)
+        {
+            yield return SceneManager.UnloadScene(sceneName);
+            yield return null;
         }
     }
 }

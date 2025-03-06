@@ -22,10 +22,14 @@ public class SoundManager:MonoBehaviour
     AudioSource AudioEffect;
     GameObject SoundObj;
 
+    // DEBUG
+    [SerializeField] private bool PRINT_LOG = false;
+
     #region singleton
     private void Initialize()
     {
         SoundObj = new GameObject("SoundManager");
+        GameObject.DontDestroyOnLoad(SoundObj);
 
         AudioEffect = SoundObj.AddComponent<AudioSource>();
         AudioEffect.playOnAwake = false;
@@ -36,7 +40,7 @@ public class SoundManager:MonoBehaviour
     #region Sound
     public void PlayEffect(AudioClip clip, float volume = 1)
     {
-        Debug.Log("TryPlayEffect" + clip.name);
+        if(PRINT_LOG) Debug.Log("TryPlayEffect" + clip.name);
         AudioEffect.PlayOneShot(clip, volume);
     }
 

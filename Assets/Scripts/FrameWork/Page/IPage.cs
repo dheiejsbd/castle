@@ -8,8 +8,9 @@ namespace FrameWork.Page
     {
         int ID { get; }
         void Initialize();
+        IEnumerator Prepare();
         void Enter();
         void Update();
-        void Exit();
+        IEnumerator Exit();
     }
 }

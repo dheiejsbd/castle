@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using FrameWork.FSM;
+using DG.Tweening;
 
 public class Attack : IState
 {
@@ -17,7 +18,12 @@ public class Attack : IState
 
     public void Enter()
     {
+        Debug.Log("Enter");
+        if (entity.death) return;
         entity.animator.Play("Attack");
+        entity.dismiss = true;
+        entity.renderer.DOFade(0, 0.5f).SetDelay(0.3f);
+        Coroutine.instance.Timer(0.8f, () => entity.RelasePool());
     }
 
     public void Execute()
@@ -27,5 +33,6 @@ public class Attack : IState
 
     public void Exit()
     {
+        entity.renderer.DOFade(1, 0);
     }
 }

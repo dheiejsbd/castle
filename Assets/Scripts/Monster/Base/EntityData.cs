@@ -6,6 +6,8 @@ public abstract class EntityData : ScriptableObject
     public abstract MonsterID id { get; }
 
     public GameObject gameObject;
+    public int progressValue;
+
     public AudioClip deathSound;
     public AudioClip attackSound;
     public AudioClip hitSound;

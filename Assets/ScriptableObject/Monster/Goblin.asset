@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfdad72c9355a994490b439c1a39aff6, type: 3}
-  m_Name: ShilderData
+  m_Script: {fileID: 11500000, guid: 6d129e22a9be9584ba6360debd4aba69, type: 3}
+  m_Name: Goblin
   m_EditorClassIdentifier: 
-  gameObject: {fileID: 250448874059954433, guid: 77b76b32466b17544aec419838d2633d, type: 3}
+  gameObject: {fileID: 5219363296111737720, guid: ae44121083976b34d802de5fd2be8ad7, type: 3}
+  progressValue: 1
   deathSound: {fileID: 8300000, guid: b7dae0e55a3dfec4d84020acb532aedf, type: 3}
   attackSound: {fileID: 0}
-  hitSound: {fileID: 8300000, guid: 84ece819b9e2b454589486554f1cb74c, type: 3}
-  pathtype: 0
+  hitSound: {fileID: 0}
+  pathtype: 1

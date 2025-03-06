@@ -1,4 +1,5 @@
-﻿using FrameWork.Message;
+﻿using DG.Tweening;
+using FrameWork.Message;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,15 @@ namespace Player
 {
     public class PlayerController:MonoBehaviour
     {
+        public PlayerState State;
         PlayerInput input;
         PlayerAnimController animController;
+
+        public readonly Value<int> health = new Value<int>(5);
+        public int MaxHealth = 100;
+
         bool canAttack = true;
-        const float AttackDist = 0.15f * 5;
-        const float AttackOffset = 0.05f * 5;
+        [SerializeField] float attackRange;
         const float AttackCoolTime = 0.125f;
 
         public event Action<Entity> AttackSuccess;
@@ -21,6 +26,7 @@ namespace Player
         [SerializeField]AudioClip attackSound;
         [SerializeField]AudioClip attackSuccessSound;
 
+        public readonly Message<Entity> DeathMessage = new Message<Entity>();
         public readonly Message<Entity> HitMessage = new Message<Entity>();
         public Func<bool, Entity> GetNearByPlayerMonster;
         public bool death { get; private set; }
@@ -41,6 +47,7 @@ namespace Player
                 flash.Play();
             };
             HitMessage.AddListener(Hit);
+            health.Set(State.Health);
         }
 
         public void OnUpdate()
@@ -50,6 +57,12 @@ namespace Player
         }
 
         void Hit(Entity entity)
+        {
+            Debug.Log("player hit");
+            health.Set(health.Get - 1);
+            animController.Hit();
+        }
+        void Death(Entity entity)
         {
             Debug.Log("player death");
             death = true;
@@ -77,14 +90,19 @@ namespace Player
             }
             var controller = GetNearByPlayerMonster(left);
 
-
             if(controller != null)
             {
-                if(Mathf.Abs(Mathf.Abs(controller.gameObject.transform.position.x) - AttackDist) <= AttackOffset)
+                if (attackRange >= Mathf.Abs(controller.gameObject.transform.position.x))
                 {
                     AttackSuccess?.Invoke(controller);
                 }
             }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawLine(new Vector3(attackRange, -1), new Vector3(attackRange, 1));
+            Gizmos.DrawLine(new Vector3(-attackRange, -1), new Vector3(-attackRange, 1));
         }
     }
 }

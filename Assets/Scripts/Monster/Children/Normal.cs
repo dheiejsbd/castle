@@ -16,7 +16,7 @@ class Normal : PathMonster
         FSM.Add(new Attack(gameObject, this));
         FSM.Add(new Death(gameObject, this, data.deathSound));
 
-        EnterEventPointEvent += (Entity e) => FSM.Switch(StateID.Attack);
+        AttackSuccessEvent += (Entity e) => FSM.Switch(StateID.Attack);
         DeathEvent += (Entity e) => FSM.Switch(StateID.Deadth);
     }
 

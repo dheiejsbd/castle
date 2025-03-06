@@ -18,6 +18,7 @@ namespace FrameWork.UI
 
         protected override void Awake() 
         {
+            base.Awake();
             UnityEngine.UI.Button ButtonComponent = gameObject.GetComponent<UnityEngine.UI.Button>();
         }
 
